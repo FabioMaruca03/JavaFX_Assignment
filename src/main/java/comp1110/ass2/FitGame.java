@@ -2,6 +2,7 @@ package comp1110.ass2;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,36 +60,37 @@ public class FitGame {
      * @return True if the placement is well-formed
      */
     public static boolean isPlacementWellFormed(String placement) {
-        if (placement == null) return false;
+        if (placement == null || placement.isBlank() ||
+                placement.toCharArray().length > 10*4 || placement.toCharArray().length % 4 != 0) return false;
         else {
-            char[][] pieces = new char[10][];
-            for (int i = 0, j = 0; i < placement.toCharArray().length; i+=4) {
+
+            char[][] pieces = new char[placement.toCharArray().length/4][];
+
+            for (int i = 0; i < placement.toCharArray().length; i+=4) {
                 // Extrapolate current piece
-                char[] temp = {placement.charAt(0), placement.charAt(1), placement.charAt(2), placement.charAt(3)};
-                if (isPiecePlacementWellFormed(String.valueOf(temp))) {
-                    for (char[] piece : pieces) {
-                        // Check repetitions
-                        if (Arrays.compare(piece, temp) == 0) {
-                            return false;
-                        }
-                    }
-                    if (j == 0)
-                        pieces[0] = temp;
-                    j++;
-                } else return false;
+                char[] temp = {placement.charAt(i), placement.charAt(i+1), placement.charAt(i+2), placement.charAt(i+3)};
+                if (!isPiecePlacementWellFormed(String.valueOf(temp))) {
+                    return false;
+                }
             }
-            char[] keys = new char[10];
+            char[] keys = new char[pieces.length];
             char[] temp;
-            for (int i = 0; i < keys.length; i++) {
-                keys[i] = placement.charAt(i*4);
+            for (int i = 0; i*4 < placement.toCharArray().length; i++) {
+                keys[i] = Character.toUpperCase(placement.charAt(i*4));
             }
-            temp = Arrays.copyOf(keys, 10);
+
+            temp = Arrays.copyOf(keys, pieces.length);
             Arrays.sort(keys);
-            if (Arrays.compare(keys, temp) != 0) {
-                return false;
+
+            for (int i = 0; i < keys.length-1; i++) {
+                if (keys[i] == keys[i+1])
+                    return false;
             }
-        }
-        return false; // FIXME Task 3: determine whether a placement is well-formed
+
+            System.out.println("Temp = " + Arrays.toString(temp));
+            System.out.println("Sorted Temp = " + Arrays.toString(keys));
+            return Arrays.equals(keys, temp);
+        }// FIXME Task 3: determine whether a placement is well-formed
     }
 
     /**
