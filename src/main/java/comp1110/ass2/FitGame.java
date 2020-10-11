@@ -14,19 +14,20 @@ public class FitGame {
     /**
      * Determine whether a piece placement is well-formed according to the
      * following criteria:
+     * <pre>
      * - it consists of exactly four characters
      * - the first character is a valid piece descriptor character (b, B, g, G, ... y, Y)
      * - the second character is in the range 0 .. 9 (column)
      * - the third character is in the range 0 .. 4 (row)
      * - the fourth character is in valid orientation N, S, E, W
-     *
+     * </pre>
      * @param piecePlacement A string describing a piece placement
      * @return True if the piece placement is well-formed
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         if (piecePlacement.length() == 4) {
             char t = piecePlacement.toUpperCase().charAt(0);
-            if (t == 'B' || t == 'G' || t == 'Y' || t == 'R') {
+            if (t == 'B' || t == 'G' || t == 'Y' || t == 'R' || t == 'O' || t == 'N') {
                 int s = Integer.parseInt(String.valueOf(piecePlacement.toUpperCase().charAt(1)));
                 if (s >= 0 && s <= 9) {
                     s = Integer.parseInt(String.valueOf(piecePlacement.toUpperCase().charAt(2)));
@@ -51,6 +52,10 @@ public class FitGame {
      * @return True if the placement is well-formed
      */
     public static boolean isPlacementWellFormed(String placement) {
+        if (placement == null) return false;
+        else {
+
+        }
         return false; // FIXME Task 3: determine whether a placement is well-formed
     }
 
