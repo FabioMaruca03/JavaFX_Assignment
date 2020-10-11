@@ -1,10 +1,13 @@
 package comp1110.ass2;
 
+import comp1110.ass2.model.Sizes;
+import javafx.css.Size;
+
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static comp1110.ass2.model.Helper.*;
 
 /**
  * This class provides the text interface for the IQ Fit Game
@@ -90,7 +93,7 @@ public class FitGame {
             System.out.println("Temp = " + Arrays.toString(temp));
             System.out.println("Sorted Temp = " + Arrays.toString(keys));
             return Arrays.equals(keys, temp);
-        }// FIXME Task 3: determine whether a placement is well-formed
+        }
     }
 
     /**
@@ -107,7 +110,12 @@ public class FitGame {
      * @return True if the placement sequence is valid
      */
     public static boolean isPlacementValid(String placement) {
-        return false; // FIXME Task 5: determine whether a placement string is valid
+        if (isPlacementWellFormed(placement)) {
+            for (int i = 1; i+4 < placement.toCharArray().length; i+=4) {
+
+            }
+        }
+        return false; // TODO Task 5: determine whether a placement string is valid
     }
 
     /**
@@ -127,7 +135,87 @@ public class FitGame {
      * @return A set of all viable piece placements, or null if there are none.
      */
     static Set<String> getViablePiecePlacements(String placement, int col, int row) {
-        return null; // FIXME Task 6: determine the set of all viable piece placements given existing placements
+        List<Sizes> blankGame = List.of(
+                Sizes.B, Sizes.G, Sizes.I, Sizes.L, Sizes.N, Sizes.O, Sizes.P,Sizes.R,
+                Sizes.S, Sizes.Y, Sizes.s, Sizes.y, Sizes.b, Sizes.g, Sizes.i,Sizes.l,
+                Sizes.n, Sizes.o, Sizes.p, Sizes.r
+                );
+
+        char[] s = new char[]{'N', 'E', 'S', 'W'};
+
+        Set<String> viablePieces = new HashSet<>();
+
+        if (placement.isBlank()) {
+            for (Sizes sizes : blankGame) {
+                for (char c : s) {
+                    boolean d = false;
+                    switch (c) {
+                        case 'N': case 'S': {
+                            if (sizes.w + col < 10 && sizes.h + row < 5)
+                                d = true;
+                            break;
+                        }
+                        case 'E': {
+                            if (sizes.h + col < 10 && sizes.w + row < 5 && row-sizes.h >=0)
+                                d = true;
+                            break;
+                        }
+                        case 'W': {
+                            if (sizes.h + col < 10 && sizes.w + row < 5 && row-sizes.h <=10)
+                                d = true;
+                            break;
+                        }
+                    }
+
+                    if (d)
+                        viablePieces.add(sizes.name() + col + row + c);
+                }
+            }
+            System.out.println(viablePieces);
+            return viablePieces;
+        }
+        else if (!isPiecePlacementWellFormed(placement))
+            return null;
+        else {
+            Sizes[] sizes = new Sizes[placement.toCharArray().length/4];
+            for (int i = 0; i+4 < placement.toCharArray().length; i+=4) {
+                sizes[i/4] = Sizes.valueOf(String.valueOf(placement.charAt(i)));
+            }
+
+            for (int i = 0; i < sizes.length; i++) {
+                int xPos = Integer.parseInt(String.valueOf(placement.charAt(i+1)));
+                int yPos = Integer.parseInt(String.valueOf(placement.charAt(i+2)));
+                char r = placement.charAt(i+3);
+
+                switch (r) {
+                    case 'N' : {
+                        if (isOn(xPos, xPos+sizes[i].w, col) && isOn(yPos, yPos+sizes[i].h, row))
+                            return null;
+                        break;
+                    }
+                    case 'E' : {
+                        if (isOn(yPos, yPos+sizes[i].w, col) && isOn(xPos, xPos+sizes[i].h, row))
+                            return null;
+                        break;
+                    }
+                    case 'S' : {
+                        if (isOn(xPos, xPos+sizes[i].w, col) && isOn(yPos, yPos+sizes[i].h, row))
+                            return null;
+                        break;
+                    }
+                    case 'W' : {
+                        if (isOn(xPos, xPos+sizes[i].w, col) && isOn(yPos, yPos+sizes[i].h, row))
+                            return null;
+                        break;
+                    }
+                    default: return null;
+                }
+
+            }
+
+        }
+        return null;
+        //return null; // FIXME Task 6: determine the set of all viable piece placements given existing placements
     }
 
     /**
