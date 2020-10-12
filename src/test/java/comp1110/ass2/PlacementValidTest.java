@@ -10,8 +10,8 @@ import static org.junit.Assert.assertTrue;
 
 public class PlacementValidTest {
     // original duration < 0.15 sec -> 1 sec
-    @Rule
-    public Timeout globalTimeout = Timeout.millis(1000);
+   // @Rule
+   // public Timeout globalTimeout = Timeout.millis(1000);
 
     private void test(String in, String invalid, boolean expected) {
         boolean out = FitGame.isPlacementValid(in);

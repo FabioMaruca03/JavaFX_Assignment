@@ -118,34 +118,121 @@ public class FitGame {
      * @return True if the placement sequence is valid
      */
     public static boolean isPlacementValid(String placement) {
+        int[][] board = new int[5][10];
+        for (int i = 0; i < 5; i++) {
+            Arrays.fill(board[i], 0); // 0 for free space
+        }
         if (isPlacementWellFormed(placement)) {
             if (placement.isBlank()) {
+                return true;
+            } else {
                 for (int i = 0; i+4 < placement.toCharArray().length; i+=4) {
                     Sizes sizes = Sizes.valueOf(String.valueOf(placement.charAt(0)));
                     int yPos = Integer.parseInt(String.valueOf(placement.charAt(i+1)));
                     int xPos = Integer.parseInt(String.valueOf(placement.charAt(i+2)));
-                    for (char c : s) {
-                        boolean d = false;
-                        switch (c) { // Check if it's in the board
-                            case 'N': case 'S': {
-                                if (sizes.w + xPos < 10 && sizes.h + yPos < 5)
-                                    d = true;
-                                break;
-                            }
-                            case 'E': case 'W': {
-                                if (sizes.h + yPos < 10 && sizes.w + xPos < 5 && sizes.h-yPos >=0)
-                                    d = true;
-                                break;
-                            }
+                    char orientation = placement.charAt(i+3);
+                    boolean d = false;
+                    switch (orientation) { // Check if it's in the board
+                        case 'N': case 'S': {
+                            if (sizes.w + xPos < 10 && sizes.h + yPos < 5)
+                                d = true;
+                            break;
                         }
+                        case 'E': case 'W': {
+                            if (sizes.h + yPos < 10 && sizes.w + xPos < 5 && sizes.h-yPos >=0)
+                                d = true;
+                            break;
+                        }
+                    }
 
-                        if (!d)
-                            return false;
+                    if (!d) // if out of the board
+                        return false;
+
+                    switch (orientation) {
+                        case 'N': {
+                            for (int j = 0; j < sizes.w; j++) {
+                                if (board[yPos][xPos + j] == 0) {
+                                    board[yPos][xPos + j] = 1;
+                                } else return false;
+                            }
+                            if (board[yPos+1][xPos+sizes.at[0]] == 0) {
+                                board[yPos+1][xPos+sizes.at[0]] = 1;
+                            } else return false;
+
+                            if (sizes.at.length == 2) {
+                                if (board[yPos + 1][xPos + sizes.at[1]] == 0) {
+                                    board[yPos + 1][xPos + sizes.at[1]] = 1;
+                                } else return false;
+                            }
+
+                            break;
+                        }
+                        case 'S': {
+                            for (int j = 0; j < sizes.w; j++) {
+                                if (board[yPos+1][xPos+j] == 0) {
+                                    board[yPos+1][xPos + j] = 1;
+                                } else return false;
+                            }
+                            if (board[yPos][xPos+sizes.at[0]] == 0) {
+                                board[yPos][xPos+sizes.at[0]] = 1;
+                            } else return false;
+
+                            if (sizes.at.length == 2) {
+                                if (board[yPos][xPos + sizes.at[1]] == 0) {
+                                    board[yPos][xPos + sizes.at[1]] = 1;
+                                } else return false;
+                            }
+
+                            break;
+                        }
+                        case 'E': {
+                            for (int j = 0; j < sizes.h; j++) {
+                                if (board[yPos + j][xPos + 1] == 0) {
+                                    board[yPos + j][xPos + 1] = 1;
+                                } else return false;
+                            }
+                            if (board[yPos+sizes.at[0]][xPos] == 0) {
+                                board[yPos+sizes.at[0]][xPos] = 1;
+                            } else return false;
+
+                            if (sizes.at.length == 2) {
+                                if (board[yPos + sizes.at[1]][xPos] == 0) {
+                                    board[yPos + sizes.at[1]][xPos] = 1;
+                                } else return false;
+                            }
+
+                            break;
+                        }
+                        case 'W': {
+                            for (int j = 0; j < sizes.h; j++) {
+                                if (board[yPos + j][xPos] == 0) {
+                                    board[yPos + j][xPos] = 1;
+                                } else return false;
+                            }
+                            if (board[yPos+sizes.at[0]][xPos + 1] == 0) {
+                                board[yPos+sizes.at[0]][xPos + 1] = 1;
+                            } else return false;
+
+                            if (sizes.at.length == 2) {
+                                if (board[yPos + sizes.at[1]][xPos + 1] == 0) {
+                                    board[yPos + sizes.at[1]][xPos + 1] = 1;
+                                } else return false;
+                            }
+
+                            break;
+                        }
+                    }
+                    for (int j = 0; j < 5; j++) {
+                        for (int k = 0; k < 10; k++) {
+                            System.out.print(board[j][k]+"\t");
+                        }
+                        System.out.println();
                     }
                 }
-                System.out.println("Placement : "+placement+" is valid!");
-                return true;
             }
+            System.out.println("Placement : "+placement+" is valid!");
+            return true;
+            // todo: add overlap check
         }
         return false; // TODO Task 5: determine whether a placement string is valid
     }

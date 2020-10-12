@@ -1,7 +1,12 @@
 package comp1110.ass2.gui;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Board extends Application {
 
@@ -17,7 +22,15 @@ public class Board extends Application {
     // FIXME Task 11: Generate interesting challenges (each challenge may have just one solution)
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Application.fxml"));
 
+        Parent p = loader.load();
+        Scene s = new Scene(p, BOARD_WIDTH, BOARD_HEIGHT);
+
+        primaryStage.setScene(s);
+        primaryStage.setTitle("Game");
+
+        primaryStage.show();
     }
 }
