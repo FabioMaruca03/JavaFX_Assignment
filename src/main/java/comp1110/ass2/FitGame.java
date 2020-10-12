@@ -16,6 +16,14 @@ import static comp1110.ass2.model.Helper.*;
  * (https://www.smartgames.eu/uk/one-player-games/iq-fit)
  */
 public class FitGame {
+    private final static List<Sizes> blankGame = List.of(
+            Sizes.B, Sizes.G, Sizes.I, Sizes.L, Sizes.N, Sizes.O, Sizes.P,Sizes.R,
+            Sizes.S, Sizes.Y, Sizes.b, Sizes.g, Sizes.i, Sizes.l, Sizes.n,Sizes.o,
+            Sizes.p, Sizes.r, Sizes.s, Sizes.y
+    );
+
+    private final static char[] s = new char[]{'N', 'S', 'W', 'E'};
+
 
     /**
      * Determine whether a piece placement is well-formed according to the
@@ -111,8 +119,31 @@ public class FitGame {
      */
     public static boolean isPlacementValid(String placement) {
         if (isPlacementWellFormed(placement)) {
-            for (int i = 1; i+4 < placement.toCharArray().length; i+=4) {
+            if (placement.isBlank()) {
+                for (int i = 0; i+4 < placement.toCharArray().length; i+=4) {
+                    Sizes sizes = Sizes.valueOf(String.valueOf(placement.charAt(0)));
+                    int yPos = Integer.parseInt(String.valueOf(placement.charAt(i+1)));
+                    int xPos = Integer.parseInt(String.valueOf(placement.charAt(i+2)));
+                    for (char c : s) {
+                        boolean d = false;
+                        switch (c) {
+                            case 'N': case 'S': {
+                                if (sizes.w + xPos < 10 && sizes.h + yPos < 5)
+                                    d = true;
+                                break;
+                            }
+                            case 'E': case 'W': {
+                                if (sizes.h + yPos < 10 && sizes.w + xPos < 5 && sizes.h-yPos >=0)
+                                    d = true;
+                                break;
+                            }
+                        }
 
+                        if (!d)
+                            return false;
+                    }
+                }
+                return true;
             }
         }
         return false; // TODO Task 5: determine whether a placement string is valid
@@ -135,18 +166,16 @@ public class FitGame {
      * @return A set of all viable piece placements, or null if there are none.
      */
     static Set<String> getViablePiecePlacements(String placement, int col, int row) {
-        List<Sizes> blankGame = List.of(
-                Sizes.B, Sizes.G, Sizes.I, Sizes.L, Sizes.N, Sizes.O, Sizes.P,Sizes.R,
-                Sizes.S, Sizes.Y, Sizes.b, Sizes.g, Sizes.i, Sizes.l, Sizes.n,Sizes.o,
-                Sizes.p, Sizes.r, Sizes.s, Sizes.y
-                );
-
-        char[] s = new char[]{'N', 'S', 'W', 'E'};
+        if (!isPlacementValid(placement))
+            return null;
 
         List<String> viablePieces = new ArrayList<>();
 
         if (placement == null || placement.isBlank()) {
-            for (Sizes sizes : blankGame) {
+            for (int i = 0; i < blankGame.size(); i++) {
+                Sizes sizes = blankGame.get(i);
+                int yPos = Integer.parseInt(String.valueOf(placement.charAt(i+1)));
+                int xPos = Integer.parseInt(String.valueOf(placement.charAt(i+2)));
                 for (char c : s) {
                     boolean d = false;
                     switch (c) {
@@ -183,23 +212,15 @@ public class FitGame {
                 char r = placement.charAt(i+3);
 
                 switch (r) {
-                    case 'N' : {
+                    case 'N' :
+                    case 'S' :
+                    case 'W' : {
                         if (isOn(xPos, xPos+sizes[i].w, col) && isOn(yPos, yPos+sizes[i].h, row))
                             return null;
                         break;
                     }
                     case 'E' : {
                         if (isOn(yPos, yPos+sizes[i].w, col) && isOn(xPos, xPos+sizes[i].h, row))
-                            return null;
-                        break;
-                    }
-                    case 'S' : {
-                        if (isOn(xPos, xPos+sizes[i].w, col) && isOn(yPos, yPos+sizes[i].h, row))
-                            return null;
-                        break;
-                    }
-                    case 'W' : {
-                        if (isOn(xPos, xPos+sizes[i].w, col) && isOn(yPos, yPos+sizes[i].h, row))
                             return null;
                         break;
                     }
