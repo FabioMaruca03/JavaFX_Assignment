@@ -137,15 +137,15 @@ public class FitGame {
     static Set<String> getViablePiecePlacements(String placement, int col, int row) {
         List<Sizes> blankGame = List.of(
                 Sizes.B, Sizes.G, Sizes.I, Sizes.L, Sizes.N, Sizes.O, Sizes.P,Sizes.R,
-                Sizes.S, Sizes.Y, Sizes.s, Sizes.y, Sizes.b, Sizes.g, Sizes.i,Sizes.l,
-                Sizes.n, Sizes.o, Sizes.p, Sizes.r
+                Sizes.S, Sizes.Y, Sizes.b, Sizes.g, Sizes.i, Sizes.l, Sizes.n,Sizes.o,
+                Sizes.p, Sizes.r, Sizes.s, Sizes.y
                 );
 
-        char[] s = new char[]{'N', 'E', 'S', 'W'};
+        char[] s = new char[]{'N', 'S', 'W', 'E'};
 
-        Set<String> viablePieces = new HashSet<>();
+        List<String> viablePieces = new ArrayList<>();
 
-        if (placement.isBlank()) {
+        if (placement == null || placement.isBlank()) {
             for (Sizes sizes : blankGame) {
                 for (char c : s) {
                     boolean d = false;
@@ -155,12 +155,7 @@ public class FitGame {
                                 d = true;
                             break;
                         }
-                        case 'E': {
-                            if (sizes.h + col < 10 && sizes.w + row < 5 && row-sizes.h >=0)
-                                d = true;
-                            break;
-                        }
-                        case 'W': {
+                        case 'E': case 'W': {
                             if (sizes.h + col < 10 && sizes.w + row < 5 && row-sizes.h <=10)
                                 d = true;
                             break;
@@ -171,8 +166,8 @@ public class FitGame {
                         viablePieces.add(sizes.name() + col + row + c);
                 }
             }
-            System.out.println(viablePieces);
-            return viablePieces;
+            System.out.println(viablePieces.size() + " : " +viablePieces);
+            return Set.copyOf(viablePieces);
         }
         else if (!isPiecePlacementWellFormed(placement))
             return null;
@@ -183,8 +178,8 @@ public class FitGame {
             }
 
             for (int i = 0; i < sizes.length; i++) {
-                int xPos = Integer.parseInt(String.valueOf(placement.charAt(i+1)));
-                int yPos = Integer.parseInt(String.valueOf(placement.charAt(i+2)));
+                int yPos = Integer.parseInt(String.valueOf(placement.charAt(i+1)));
+                int xPos = Integer.parseInt(String.valueOf(placement.charAt(i+2)));
                 char r = placement.charAt(i+3);
 
                 switch (r) {
