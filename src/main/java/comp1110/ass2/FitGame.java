@@ -100,9 +100,6 @@ public class FitGame {
                     return false;
             }
 
-            System.out.println("Temp = " + Arrays.toString(temp));
-            System.out.println("Sorted Temp = " + Arrays.toString(keys));
-            System.out.println("Passed? "+Arrays.equals(keys, temp));
             return Arrays.equals(keys, temp);
         }
     }
@@ -129,7 +126,7 @@ public class FitGame {
                     int xPos = Integer.parseInt(String.valueOf(placement.charAt(i+2)));
                     for (char c : s) {
                         boolean d = false;
-                        switch (c) {
+                        switch (c) { // Check if it's in the board
                             case 'N': case 'S': {
                                 if (sizes.w + xPos < 10 && sizes.h + yPos < 5)
                                     d = true;
