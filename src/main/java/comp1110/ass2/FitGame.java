@@ -1,13 +1,9 @@
 package comp1110.ass2;
 
 import comp1110.ass2.model.Sizes;
-import javafx.css.Size;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static comp1110.ass2.model.Helper.*;
 
 /**
  * This class provides the text interface for the IQ Fit Game
