@@ -51,7 +51,9 @@ public class FitGame {
                     s = Integer.parseInt(String.valueOf(piecePlacement.toUpperCase().charAt(2)));
                     if (s >= 0 && s <= 4) {
                         t = piecePlacement.toUpperCase().charAt(3);
-                        return t == 'N' || t == 'S' || t == 'E' || t == 'W';
+                        boolean out = t == 'N' || t == 'S' || t == 'E' || t == 'W';
+                        System.out.println("Piece of Placement : "+piecePlacement+" is well formed? "+out);
+                        return out;
                     }
                 }
             }
@@ -100,6 +102,7 @@ public class FitGame {
 
             System.out.println("Temp = " + Arrays.toString(temp));
             System.out.println("Sorted Temp = " + Arrays.toString(keys));
+            System.out.println("Passed? "+Arrays.equals(keys, temp));
             return Arrays.equals(keys, temp);
         }
     }
@@ -143,6 +146,7 @@ public class FitGame {
                             return false;
                     }
                 }
+                System.out.println("Placement : "+placement+" is valid!");
                 return true;
             }
         }
