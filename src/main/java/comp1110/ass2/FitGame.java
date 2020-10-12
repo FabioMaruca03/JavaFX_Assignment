@@ -126,20 +126,28 @@ public class FitGame {
             if (placement.isBlank()) {
                 return true;
             } else {
-                for (int i = 0; i+4 < placement.toCharArray().length; i+=4) {
-                    Sizes sizes = Sizes.valueOf(String.valueOf(placement.charAt(0)));
-                    int yPos = Integer.parseInt(String.valueOf(placement.charAt(i+1)));
-                    int xPos = Integer.parseInt(String.valueOf(placement.charAt(i+2)));
-                    char orientation = placement.charAt(i+3);
+                char[][] pieces = new char[placement.toCharArray().length/4][];
+                for (int i = 0, j = 0; i < placement.toCharArray().length; i+=4, j++) {
+                    pieces[j] = new char[]{
+                            placement.charAt(i), placement.charAt(i+1),
+                            placement.charAt(i+2), placement.charAt(i+3)
+                    };
+                }
+
+                for (char[] piece : pieces) {
+                    Sizes sizes = Sizes.valueOf(String.valueOf(piece[0]));
+                    int xPos = Integer.parseInt(String.valueOf(piece[1]));
+                    int yPos = Integer.parseInt(String.valueOf(piece[2]));
+                    char orientation = piece[3];
                     boolean d = false;
                     switch (orientation) { // Check if it's in the board
                         case 'N': case 'S': {
-                            if (sizes.w + xPos < 10 && sizes.h + yPos < 5)
+                            if (sizes.w - 1 + xPos < 10 && sizes.h - 1 + yPos <= 5)
                                 d = true;
                             break;
                         }
                         case 'E': case 'W': {
-                            if (sizes.h + yPos < 10 && sizes.w + xPos < 5 && sizes.h-yPos >=0)
+                            if (sizes.h - 1 + yPos < 10 && sizes.w - 1 + xPos <= 5)
                                 d = true;
                             break;
                         }
@@ -155,13 +163,13 @@ public class FitGame {
                                     board[yPos][xPos + j] = 1;
                                 } else return false;
                             }
-                            if (board[yPos+1][xPos+sizes.at[0]] == 0) {
-                                board[yPos+1][xPos+sizes.at[0]] = 1;
+                            if (board[yPos + 1][xPos + sizes.at[0] - 1] == 0) {
+                                board[yPos + 1][xPos + sizes.at[0] - 1] = 1;
                             } else return false;
 
                             if (sizes.at.length == 2) {
-                                if (board[yPos + 1][xPos + sizes.at[1]] == 0) {
-                                    board[yPos + 1][xPos + sizes.at[1]] = 1;
+                                if (board[yPos + 1][xPos + sizes.at[1] - 1] == 0) {
+                                    board[yPos + 1][xPos + sizes.at[1] - 1] = 1;
                                 } else return false;
                             }
 
@@ -169,17 +177,17 @@ public class FitGame {
                         }
                         case 'S': {
                             for (int j = 0; j < sizes.w; j++) {
-                                if (board[yPos+1][xPos+j] == 0) {
-                                    board[yPos+1][xPos + j] = 1;
+                                if (board[yPos + 1][xPos + j] == 0) {
+                                    board[yPos + 1][xPos + j] = 1;
                                 } else return false;
                             }
-                            if (board[yPos][xPos+sizes.at[0]] == 0) {
-                                board[yPos][xPos+sizes.at[0]] = 1;
+                            if (board[yPos][xPos + (sizes.w - sizes.at[0])] == 0) {
+                                board[yPos][xPos + (sizes.w - sizes.at[0])] = 1;
                             } else return false;
 
                             if (sizes.at.length == 2) {
-                                if (board[yPos][xPos + sizes.at[1]] == 0) {
-                                    board[yPos][xPos + sizes.at[1]] = 1;
+                                if (board[yPos][xPos + (sizes.w - sizes.at[1])] == 0) {
+                                    board[yPos][xPos + (sizes.w - sizes.at[1])] = 1;
                                 } else return false;
                             }
 
@@ -191,8 +199,8 @@ public class FitGame {
                                     board[yPos + j][xPos + 1] = 1;
                                 } else return false;
                             }
-                            if (board[yPos+sizes.at[0]][xPos] == 0) {
-                                board[yPos+sizes.at[0]][xPos] = 1;
+                            if (board[yPos + sizes.at[0]][xPos] == 0) {
+                                board[yPos + sizes.at[0]][xPos] = 1;
                             } else return false;
 
                             if (sizes.at.length == 2) {
@@ -209,22 +217,23 @@ public class FitGame {
                                     board[yPos + j][xPos] = 1;
                                 } else return false;
                             }
-                            if (board[yPos+sizes.at[0]][xPos + 1] == 0) {
-                                board[yPos+sizes.at[0]][xPos + 1] = 1;
+                            if (board[yPos + sizes.at[0]][xPos + 1] == 0) {
+                                board[yPos + sizes.at[0] - 1][xPos + 1] = 1;
                             } else return false;
 
                             if (sizes.at.length == 2) {
-                                if (board[yPos + sizes.at[1]][xPos + 1] == 0) {
-                                    board[yPos + sizes.at[1]][xPos + 1] = 1;
+                                if (board[yPos + (sizes.h - sizes.at[1])][xPos + 1] == 0) {
+                                    board[yPos + (sizes.h - sizes.at[1])][xPos + 1] = 1;
                                 } else return false;
                             }
 
                             break;
                         }
                     }
+                    System.out.println();
                     for (int j = 0; j < 5; j++) {
                         for (int k = 0; k < 10; k++) {
-                            System.out.print(board[j][k]+"\t");
+                            System.out.print(board[j][k] + "\t");
                         }
                         System.out.println();
                     }
