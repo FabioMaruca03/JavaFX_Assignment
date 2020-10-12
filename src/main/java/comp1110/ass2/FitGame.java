@@ -142,12 +142,12 @@ public class FitGame {
                     boolean d = false;
                     switch (orientation) { // Check if it's in the board
                         case 'N': case 'S': {
-                            if (sizes.w - 1 + xPos < 10 && sizes.h - 1 + yPos <= 5)
+                            if (sizes.w - 1 + xPos < 10 && sizes.h - 1 + yPos < 5)
                                 d = true;
                             break;
                         }
                         case 'E': case 'W': {
-                            if (sizes.h - 1 + yPos < 10 && sizes.w - 1 + xPos <= 5)
+                            if (sizes.h - 1 + yPos < 10 && sizes.w - 1 + xPos < 5)
                                 d = true;
                             break;
                         }
