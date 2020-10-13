@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.FitGame;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -43,10 +44,12 @@ public class Viewer extends Application {
      * @param placement A valid placement string
      */
     void makePlacement(String placement) {
-        int numberofpieces = placement.length()/4;
-        for (int i = 0; i < numberofpieces; i++) {
-            getPieces(placement.substring(4*i,4*i+4));
-        }
+        if (FitGame.isPlacementValid(placement)) {
+            int numberofpieces = placement.length() / 4;
+            for (int i = 0; i < numberofpieces; i++) {
+                getPieces(placement.substring(4 * i, 4 * i + 4));
+            }
+        } else textField.clear();
         // FIXME Task 4: implement the simple placement viewer
     }
     // Helper function for Task 4, this will print the actual images
@@ -77,7 +80,7 @@ public class Viewer extends Application {
             }
         }
         // This below line was given to me by Matthew Chen the Viewer.class.getResource -- Peter Zhao
-        Image filename = new Image(Viewer.class.getResource("/assets/"+piecepng+".png").toString());
+        Image filename = new Image(Viewer.class.getResource("/assets-components/"+piecepng+".png").toString());
         placepiece.setImage(filename);
 
         // place at the correct x coordinate -- Peter Zhao
