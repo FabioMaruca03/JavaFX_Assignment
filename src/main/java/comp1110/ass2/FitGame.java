@@ -196,8 +196,8 @@ public class FitGame {
                                     board[yPos + j][xPos] = 1;
                                 } else return false;
                             }
-                            if (board[yPos + sizes.at[0]][xPos] == 0) {
-                                board[yPos + sizes.at[0]][xPos] = 1;
+                            if (board[yPos + sizes.at[0]][xPos - 1] == 0) {
+                                board[yPos + sizes.at[0]][xPos - 1] = 1;
                             } else return false;
 
                             if (sizes.at.length == 2) {
@@ -214,8 +214,8 @@ public class FitGame {
                                     board[yPos + j][xPos] = 1;
                                 } else return false;
                             }
-                            if (board[yPos + sizes.at[0]][xPos] == 0) {
-                                board[yPos + sizes.at[0]][xPos] = 1;
+                            if (board[yPos + sizes.at[0]][xPos + 1] == 0) {
+                                board[yPos + sizes.at[0]][xPos + 1] = 1;
                             } else return false;
 
                             if (sizes.at.length == 2) {
