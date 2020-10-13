@@ -143,8 +143,14 @@ public class FitGame {
                                 d = true;
                             break;
                         }
-                        case 'E': case 'W': {
-                            if (sizes.h - 1 + yPos < 10 && sizes.w - 1 + xPos < 5)
+                        case 'E': {
+                            if (sizes.h - 1 + xPos < 10 && sizes.w - 1 + yPos < 5 && xPos - 1 >=0)
+                                d = true;
+                            break;
+                        }
+
+                        case 'W': {
+                            if (sizes.h - 1 + xPos < 10 && sizes.w - 1 + yPos < 5 && xPos + 1 <= 9)
                                 d = true;
                             break;
                         }
@@ -201,8 +207,8 @@ public class FitGame {
                             } else return false;
 
                             if (sizes.at.length == 2) {
-                                if (board[yPos + sizes.at[1]][xPos - 1] == 0) {
-                                    board[yPos + sizes.at[1]][xPos - 1] = 1;
+                                if (board[yPos + sizes.at[1] - 1][xPos - 1] == 0) {
+                                    board[yPos + sizes.at[1] - 1][xPos - 1] = 1;
                                 } else return false;
                             }
 

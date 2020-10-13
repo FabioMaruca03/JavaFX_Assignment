@@ -23,6 +23,7 @@ import java.io.InputStream;
  * NOTE: This class is separate from your main game class.  This
  * class does not play a game, it just illustrates various piece
  * placements.
+ * </p>
  */
 public class Viewer extends Application {
 
@@ -45,8 +46,8 @@ public class Viewer extends Application {
      */
     void makePlacement(String placement) {
         if (FitGame.isPlacementValid(placement)) {
-            int numberofpieces = placement.length() / 4;
-            for (int i = 0; i < numberofpieces; i++) {
+            int numberOfPieces = placement.length() / 4;
+            for (int i = 0; i < numberOfPieces; i++) {
                 getPieces(placement.substring(4 * i, 4 * i + 4));
             }
         } else textField.clear();
