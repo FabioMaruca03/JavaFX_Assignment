@@ -138,7 +138,8 @@ public class FitGame {
                     char orientation = piece[3];
                     boolean d = false;
                     switch (orientation) { // Check if it's in the board
-                        case 'N': case 'S': {
+                        case 'N':
+                        case 'S': {
                             if (sizes.w - 1 + xPos < 10 && sizes.h - 1 + yPos < 5)
                                 d = true;
                             break;
@@ -197,7 +198,7 @@ public class FitGame {
                             break;
                         }
                         case 'E': {
-                            for (int j = 0; j < sizes.h; j++) {
+                            for (int j = 0; j < sizes.w; j++) {
                                 if (board[yPos + j][xPos] == 0) {
                                     board[yPos + j][xPos] = 1;
                                 } else return false;
@@ -215,7 +216,7 @@ public class FitGame {
                             break;
                         }
                         case 'W': {
-                            for (int j = 0; j < sizes.h; j++) {
+                            for (int j = 0; j < sizes.w; j++) {
                                 if (board[yPos + j][xPos] == 0) {
                                     board[yPos + j][xPos] = 1;
                                 } else return false;
