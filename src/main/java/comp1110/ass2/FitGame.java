@@ -119,6 +119,7 @@ public class FitGame {
             Arrays.fill(board[i], 0); // 0 for free space
         }
         if (isPlacementWellFormed(placement)) {
+            System.out.println(placement);
             if (placement.isBlank()) {
                 return true;
             } else {
@@ -191,8 +192,8 @@ public class FitGame {
                         }
                         case 'E': {
                             for (int j = 0; j < sizes.h; j++) {
-                                if (board[yPos + j][xPos + 1] == 0) {
-                                    board[yPos + j][xPos + 1] = 1;
+                                if (board[yPos + j][xPos] == 0) {
+                                    board[yPos + j][xPos] = 1;
                                 } else return false;
                             }
                             if (board[yPos + sizes.at[0]][xPos] == 0) {
@@ -200,8 +201,8 @@ public class FitGame {
                             } else return false;
 
                             if (sizes.at.length == 2) {
-                                if (board[yPos + sizes.at[1]][xPos] == 0) {
-                                    board[yPos + sizes.at[1]][xPos] = 1;
+                                if (board[yPos + sizes.at[1]][xPos - 1] == 0) {
+                                    board[yPos + sizes.at[1]][xPos - 1] = 1;
                                 } else return false;
                             }
 
@@ -213,13 +214,13 @@ public class FitGame {
                                     board[yPos + j][xPos] = 1;
                                 } else return false;
                             }
-                            if (board[yPos + sizes.at[0]][xPos + 1] == 0) {
-                                board[yPos + sizes.at[0] - 1][xPos + 1] = 1;
+                            if (board[yPos + sizes.at[0]][xPos] == 0) {
+                                board[yPos + sizes.at[0]][xPos] = 1;
                             } else return false;
 
                             if (sizes.at.length == 2) {
-                                if (board[yPos + (sizes.h - sizes.at[1])][xPos + 1] == 0) {
-                                    board[yPos + (sizes.h - sizes.at[1])][xPos + 1] = 1;
+                                if (board[yPos + sizes.at[1]][xPos + 1] == 0) {
+                                    board[yPos + sizes.at[1]][xPos + 1] = 1;
                                 } else return false;
                             }
 
