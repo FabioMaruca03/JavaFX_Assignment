@@ -5,7 +5,7 @@ public enum Sizes {
     B(2, 4, new int[] {2, 4}),
     g(2, 3, new int[] {2}),
     G(2, 3, new int[] {1, 2}),
-    i(2, 3, new int[] {1}),
+    i(2, 3, new int[] {3}),
     I(2, 3, new int[] {2, 3}),
     l(2, 3, new int[] {1}),
     L(2, 3, new int[] {1, 3}),
