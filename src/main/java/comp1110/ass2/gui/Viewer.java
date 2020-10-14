@@ -37,6 +37,7 @@ public class Viewer extends Application {
     //Changed root to board for easier reading -- Peter Zhao
     private final Group board = new Group();
     private final Group controls = new Group();
+    private String currentPlacement = "";
     private TextField textField;
 
     /**
@@ -45,11 +46,12 @@ public class Viewer extends Application {
      * @param placement A valid placement string
      */
     void makePlacement(String placement) {
-        if (FitGame.isPlacementValid(placement)) {
+        if (FitGame.isPlacementValid(placement+currentPlacement)) {
             int numberOfPieces = placement.length() / 4;
             for (int i = 0; i < numberOfPieces; i++) {
                 getPieces(placement.substring(4 * i, 4 * i + 4));
             }
+            currentPlacement+=placement;
         } else textField.clear();
         // FIXME Task 4: implement the simple placement viewer
     }
