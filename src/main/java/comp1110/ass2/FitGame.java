@@ -241,9 +241,8 @@ public class FitGame {
             }
             System.out.println("Placement : "+placement+" is valid!");
             return true;
-            // todo: add overlap check
         }
-        return false; // TODO Task 5: determine whether a placement string is valid
+        return false;
     }
 
     /**
@@ -271,10 +270,11 @@ public class FitGame {
         for (Sizes sizes : blankGame) {
             for (char orientation : s) {
                 String piece = sizes.name()+col+row+orientation;
-                if (isPlacementValid(placement+piece)) {
-                    if (viable == null) viable = new HashSet<>();
-                    viable.add(piece);
-                }
+                if (!placement.contains(piece))
+                    if (isPlacementValid(placement+piece)) {
+                        if (viable == null) viable = new HashSet<>();
+                            viable.add(piece);
+                    }
             }
         }
 
