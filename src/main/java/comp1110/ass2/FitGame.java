@@ -130,7 +130,7 @@ public class FitGame {
                     pieces[j] = new char[]{
                             placement.charAt(i), placement.charAt(i+1),
                             placement.charAt(i+2), placement.charAt(i+3)
-                    };
+                    }; // input b00E at (0, 2),.  Expected [l02W, r01W]
                 }
 
                 for (char[] piece : pieces) {
