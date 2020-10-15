@@ -10,6 +10,7 @@ import java.util.*;
  * <p>
  * The game is based directly on Smart Games' IQ-Fit game
  * (https://www.smartgames.eu/uk/one-player-games/iq-fit)
+ * </p>
  */
 public class FitGame {
     private final static List<Sizes> blankGame = List.of(
@@ -36,7 +37,7 @@ public class FitGame {
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         if (piecePlacement.length() == 4) {
-            char t = piecePlacement.toUpperCase().charAt(0);
+            char t = piecePlacement.toUpperCase().charAt(0); // Check for both lowercase and uppercase scenarios
             if (t == 'B' || t == 'G' || t == 'Y' || t == 'R' || t == 'O' || t == 'N' || t == 'I' || t == 'L' || t == 'P' || t == 'S') {
                 if (!Character.isDigit(piecePlacement.toUpperCase().charAt(1)))
                     return false;
@@ -96,7 +97,7 @@ public class FitGame {
                     return false;
             }
 
-            return Arrays.equals(keys, temp);
+            return Arrays.equals(keys, temp); // Compares a sorted array with the current array
         }
     }
 
@@ -115,16 +116,17 @@ public class FitGame {
      */
     public static boolean isPlacementValid(String placement) {
         int[][] board = new int[5][10];
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) { // Create a blank board to emulate the game
             Arrays.fill(board[i], 0); // 0 for free space
         }
         if (isPlacementWellFormed(placement)) {
             System.out.println(placement);
-            if (placement.isBlank()) {
+            if (placement.isBlank()) { // if it's blank of course the board it's good
                 return true;
             } else {
                 char[][] pieces = new char[placement.toCharArray().length/4][];
                 for (int i = 0, j = 0; i < placement.toCharArray().length; i+=4, j++) {
+                    // Get all pieces
                     pieces[j] = new char[]{
                             placement.charAt(i), placement.charAt(i+1),
                             placement.charAt(i+2), placement.charAt(i+3)
@@ -156,24 +158,26 @@ public class FitGame {
                     if (!d) // if out of the board
                         return false;
 
-                    switch (orientation) {
+                    switch (orientation) { // Overlapping cases
                         case 'N': {
+                            // Pattern start
                             for (int j = 0; j < sizes.w; j++) {
-                                if (board[yPos][xPos + j] == 0) {
-                                    board[yPos][xPos + j] = 1;
+                                if (board[yPos][xPos + j] == 0) { // Check place validity
+                                    board[yPos][xPos + j] = 1; // Draw
                                 } else return false;
                             }
-                            if (board[yPos + 1][xPos + sizes.at[0] - 1] == 0) {
+                            if (board[yPos + 1][xPos + sizes.at[0] - 1] == 0) { // Draw first imperfection
                                 board[yPos + 1][xPos + sizes.at[0] - 1] = 1;
                             } else return false;
 
                             if (sizes.at.length == 2) {
-                                if (board[yPos + 1][xPos + sizes.at[1] - 1] == 0) {
+                                if (board[yPos + 1][xPos + sizes.at[1] - 1] == 0) { // Draw the second inperfection
                                     board[yPos + 1][xPos + sizes.at[1] - 1] = 1;
                                 } else return false;
                             }
 
                             break;
+                            // Pattern end
                         }
                         case 'S': {
                             for (int j = 0; j < sizes.w; j++) {
@@ -230,7 +234,7 @@ public class FitGame {
                             break;
                         }
                     }
-                    System.out.println();
+                    System.out.println(); // DEBUG Print
                     for (int j = 0; j < 5; j++) {
                         for (int k = 0; k < 10; k++) {
                             System.out.print(board[j][k] + "\t");
@@ -264,7 +268,7 @@ public class FitGame {
     static Set<String> getViablePiecePlacements(String placement, int col, int row) {
         Set<String> viable = null;
         Set<String> pieces = new HashSet<>();
-        if (placement.isBlank()) {
+        if (placement.isBlank()) { // If blank check for each possible piece variation if fits inside -> (col, row)
             for (Sizes sizes : blankGame)
                 for (char orientation : s)
                     if (isPlacementValid(sizes.name()+row+col+orientation))
@@ -277,7 +281,7 @@ public class FitGame {
             pieces.add(piece);
         }
 
-        for (Sizes sizes : blankGame) {
+        for (Sizes sizes : blankGame) { // check for each possible piece variation if fits inside -> (col, row)
             for (char orientation : s) {
                 String piece = sizes.name()+row+col+orientation;
                 if (!pieces.contains(piece)) {

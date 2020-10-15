@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * A very simple viewer for piece placements in the IQ-Fit game.
@@ -46,12 +48,25 @@ public class Viewer extends Application {
      * @param placement A valid placement string
      */
     void makePlacement(String placement) {
-        if (FitGame.isPlacementValid(placement+currentPlacement)) {
+        if (placement.isBlank()) return;
+        String[] pieces = new String[placement.length()/4+currentPlacement.length()/4];
+        for (int i = 0; i < placement.length() / 4; i++) {
+            pieces[i] = placement.substring(i*4, 4*i+4);
+        }
+
+        for (int i = placement.length()/4; i < currentPlacement.length() / 4; i++) {
+            pieces[i] = currentPlacement.substring(i*4, 4*i+4);
+        }
+
+        StringBuilder result = new StringBuilder();
+        Arrays.stream(pieces).sorted().forEach(result::append);
+
+        if (FitGame.isPlacementValid(result.toString())) {
             int numberOfPieces = placement.length() / 4;
             for (int i = 0; i < numberOfPieces; i++) {
                 getPieces(placement.substring(4 * i, 4 * i + 4));
             }
-            currentPlacement+=placement;
+            currentPlacement = result.toString();
         } else textField.clear();
         // FIXME Task 4: implement the simple placement viewer
     }
