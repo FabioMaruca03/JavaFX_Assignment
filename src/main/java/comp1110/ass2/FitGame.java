@@ -262,12 +262,17 @@ public class FitGame {
      * @return A set of all viable piece placements, or null if there are none.
      */
     static Set<String> getViablePiecePlacements(String placement, int col, int row) {
-        if (!isPlacementValid(placement))
-            return null;
-
         Set<String> viable = null;
         Set<String> pieces = new HashSet<>();
-        for (int i = 0; i+4 < placement.length(); i+=4) {
+        if (placement.isBlank()) {
+            for (Sizes sizes : blankGame)
+                for (char orientation : s)
+                    if (isPlacementValid(sizes.name()+row+col+orientation))
+                        pieces.add(sizes.name()+row+col+orientation);
+            return pieces;
+        } else if (!isPlacementValid(placement))
+            return null;
+        else for (int i = 0; i+4 < placement.length(); i+=4) {
             String piece = placement.substring(i, i+3);
             pieces.add(piece);
         }
@@ -275,10 +280,11 @@ public class FitGame {
         for (Sizes sizes : blankGame) {
             for (char orientation : s) {
                 String piece = sizes.name()+row+col+orientation;
-                if (pieces.stream().noneMatch(it->it.equals(piece))) {
+                if (!pieces.contains(piece)) {
                     if (isPlacementValid(placement+piece)) {
                         if (viable == null) viable = new HashSet<>();
-                            viable.add(piece); }
+                            viable.add(piece);
+                    }
                 }
             }
         }
