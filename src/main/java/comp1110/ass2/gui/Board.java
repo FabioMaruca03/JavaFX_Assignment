@@ -3,6 +3,7 @@ package comp1110.ass2.gui;
 import comp1110.ass2.FitGame;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,8 +12,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +39,9 @@ public class Board extends Application {
     private final Group controls = new Group();
     private String currentPlacement = "";
     private TextField textField;
-    private List<ImageView> pieces = new ArrayList<>();
+    private final List<ImageView> pieces = new ArrayList<>();
+    private static Stage menu = null;
+    private static Stage game = null;
 
     /**
      * Draw a placement in the window, removing any previously drawn one
@@ -42,10 +52,6 @@ public class Board extends Application {
         if (placement.isBlank()) return;
         String[] pieces = new String[placement.length()/4+currentPlacement.length()/4];
         Arrays.fill(pieces, "");
-        for (int i = 0; i < placement.length() / 4; i++) {
-            pieces[i] = placement.substring(i*4, 4*i+4);
-        }
-
         for (int i = 0; i < currentPlacement.length() / 4; i++) {
             String piece = currentPlacement.substring(i*4, 4*i+4);
             if (Arrays.stream(pieces).noneMatch(it->it.equals(piece)))
@@ -55,11 +61,13 @@ public class Board extends Application {
                 return;
             }
         }
-
-
+        for (int i = 0; i < placement.length() / 4; i++) {
+            pieces[i] = placement.substring(i*4, 4*i+4);
+        }
 
         StringBuilder result = new StringBuilder();
-        Arrays.stream(pieces).sorted().forEach(result::append);
+        Arrays.sort(pieces);
+        Arrays.stream(pieces).forEach(result::append);
 
         if (FitGame.isPlacementValid(result.toString())) {
             int numberOfPieces = placement.length() / 4;
@@ -182,6 +190,7 @@ public class Board extends Application {
         button.setOnAction(e -> {
             makePlacement(textField.getText());
             textField.clear();
+            e.consume();
         });
         Button clear = new Button("Clear");
         clear.setOnAction(e -> {
@@ -190,8 +199,14 @@ public class Board extends Application {
             pieces.clear();
             e.consume();
         });
+        Button menu = new Button("Menu");
+        menu.setOnAction(e -> {
+            Board.menu.show();
+            Board.game.hide();
+            e.consume();
+        });
         HBox hb = new HBox();
-        hb.getChildren().addAll(label1, textField, button, clear);
+        hb.getChildren().addAll(label1, textField, button, clear, menu);
         hb.setSpacing(10);
         hb.setLayoutX(130);
         hb.setLayoutY(BOARD_HEIGHT - 50);
@@ -212,7 +227,56 @@ public class Board extends Application {
         board.getChildren().add(controls);
         makeControls();
         primaryStage.setScene(scene);
-        primaryStage.show();
+        game = primaryStage;
+        menu = menu();
+        menu.show();
+    }
+
+    private Stage menu() {
+        Stage menu = new Stage(StageStyle.UNDECORATED);
+        menu.setTitle("Board Menu");
+        menu.setResizable(false);
+
+        BorderPane p = new BorderPane();
+        VBox box = new VBox();
+        box.setSpacing(20);
+
+        Button start = new Button("Start");
+        start.setPrefSize(70,30);
+        start.setOnAction(e -> {
+            currentPlacement = "";
+            board.getChildren().removeAll(pieces);
+            pieces.clear();
+            game.show();
+            e.consume();
+        });
+        box.getChildren().add(start);
+
+        Button close = new Button("Exit");
+        close.setPrefSize(70, 30);
+        close.setOnAction(e -> {
+            menu.close();
+            if (game != null)
+                game.close();
+            e.consume();
+            System.exit(0);
+        });
+        box.getChildren().add(close);
+
+        Button how = new Button("How to play");
+        how.setPrefSize(70,30);
+        how.setOnAction(e -> {
+            // todo: Add how to play logic ????
+            e.consume();
+        });
+
+        box.setAlignment(Pos.CENTER);
+        p.setCenter(box);
+        Scene s = new Scene(p, 500, 500, Color.GRAY);
+        menu.setScene(s);
+
+
+        return menu;
     }
 
     // FIXME Task 8: Implement challenges (you may use assets provided for you in comp1110.ass2.gui.assets)

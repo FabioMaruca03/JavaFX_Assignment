@@ -78,7 +78,9 @@ public class FitGame {
 
             for (int i = 0; i < placement.toCharArray().length; i+=4) {
                 // Extrapolate current piece
-                char[] temp = {placement.charAt(i), placement.charAt(i+1), placement.charAt(i+2), placement.charAt(i+3)};
+                char[] temp = {
+                        placement.charAt(i), placement.charAt(i+1), placement.charAt(i+2), placement.charAt(i+3)
+                };
                 if (!isPiecePlacementWellFormed(String.valueOf(temp))) {
                     return false;
                 }
