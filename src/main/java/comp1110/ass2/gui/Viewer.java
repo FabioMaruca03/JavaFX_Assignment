@@ -16,7 +16,9 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +43,7 @@ public class Viewer extends Application {
     private final Group controls = new Group();
     private String currentPlacement = "";
     private TextField textField;
+    private List<ImageView> pieces = new ArrayList<>();
 
     /**
      * Draw a placement in the window, removing any previously drawn one
@@ -50,13 +53,22 @@ public class Viewer extends Application {
     void makePlacement(String placement) {
         if (placement.isBlank()) return;
         String[] pieces = new String[placement.length()/4+currentPlacement.length()/4];
+        Arrays.fill(pieces, "");
         for (int i = 0; i < placement.length() / 4; i++) {
             pieces[i] = placement.substring(i*4, 4*i+4);
         }
 
-        for (int i = placement.length()/4; i < currentPlacement.length() / 4; i++) {
-            pieces[i] = currentPlacement.substring(i*4, 4*i+4);
+        for (int i = 0; i < currentPlacement.length() / 4; i++) {
+            String piece = currentPlacement.substring(i*4, 4*i+4);
+            if (Arrays.stream(pieces).noneMatch(it->it.equals(piece)))
+                pieces[i+placement.length()/4] = piece;
+            else {
+                textField.clear();
+                return;
+            }
         }
+
+
 
         StringBuilder result = new StringBuilder();
         Arrays.stream(pieces).sorted().forEach(result::append);
@@ -163,6 +175,7 @@ public class Viewer extends Application {
         // Print the image
         System.out.println(piecepng);
         System.out.println(NorthSouth.indexOf(piece.charAt(3)));
+        pieces.add(placepiece);
         board.getChildren().add(placepiece);
         // Something worth mentioning, even if the piece is not well formed the piece will still print, this needs a fix -- Peter Zhao
         // In addition to this, pieces that are facing either East or West do not place properly, I am trying to fix this error, but have had no luck -- Peter Zhao
@@ -182,8 +195,15 @@ public class Viewer extends Application {
             makePlacement(textField.getText());
             textField.clear();
         });
+        Button clear = new Button("Clear");
+        clear.setOnAction(e -> {
+            currentPlacement = "";
+            board.getChildren().removeAll(pieces);
+            pieces.clear();
+            e.consume();
+        });
         HBox hb = new HBox();
-        hb.getChildren().addAll(label1, textField, button);
+        hb.getChildren().addAll(label1, textField, button, clear);
         hb.setSpacing(10);
         hb.setLayoutX(130);
         hb.setLayoutY(VIEWER_HEIGHT - 50);

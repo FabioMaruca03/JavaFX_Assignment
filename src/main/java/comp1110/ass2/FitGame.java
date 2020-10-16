@@ -101,6 +101,8 @@ public class FitGame {
         }
     }
 
+    private static int[][] board = new int[5][10];
+
     /**
      * Determine whether a placement string is valid.
      *
@@ -115,7 +117,6 @@ public class FitGame {
      * @return True if the placement sequence is valid
      */
     public static boolean isPlacementValid(String placement) {
-        int[][] board = new int[5][10];
         for (int i = 0; i < 5; i++) { // Create a blank board to emulate the game
             Arrays.fill(board[i], 0); // 0 for free space
         }
@@ -271,7 +272,7 @@ public class FitGame {
         if (placement.isBlank()) { // If blank check for each possible piece variation if fits inside -> (col, row)
             for (Sizes sizes : blankGame)
                 for (char orientation : s)
-                    if (isPlacementValid(sizes.name()+row+col+orientation))
+                    if (isPlacementValid(sizes.name()+row+col+orientation) && board[col][row] == 1)
                         pieces.add(sizes.name()+row+col+orientation);
             return pieces;
         } else if (!isPlacementValid(placement))
@@ -285,16 +286,52 @@ public class FitGame {
             for (char orientation : s) {
                 String piece = sizes.name()+row+col+orientation;
                 if (!pieces.contains(piece)) {
-                    if (isPlacementValid(placement+piece)) {
+                    if (isPlacementValid(placement+piece) && board[col][row] == 1) {
                         if (viable == null) viable = new HashSet<>();
-                            viable.add(piece);
+                        viable.add(piece);
                     }
+                }
+                if (row < 5 && row > 0 && col < 9 && col > 0) {
+                    for (int i = -1; i < 2; i++) {
+                        piece = sizes.name()+(row-1)+(col+i)+orientation;
+                        if (!pieces.contains(piece)) {
+                            if (isPlacementValid(placement+piece) && board[col][row] == 1) {
+                                if (viable == null) viable = new HashSet<>();
+                                viable.add(piece);
+                            }
+                        }
+
+                        piece = sizes.name()+(row+1)+(col+i)+orientation;
+                        if (!pieces.contains(piece)) {
+                            if (isPlacementValid(placement+piece) && board[col][row] == 1) {
+                                if (viable == null) viable = new HashSet<>();
+                                viable.add(piece);
+                            }
+                        }
+
+                        piece = sizes.name()+(row+i)+(col+1)+orientation;
+                        if (!pieces.contains(piece)) {
+                            if (isPlacementValid(placement+piece) && board[col][row] == 1) {
+                                if (viable == null) viable = new HashSet<>();
+                                viable.add(piece);
+                            }
+                        }
+
+                        piece = sizes.name()+(row+i)+(col-1)+orientation;
+                        if (!pieces.contains(piece)) {
+                            if (isPlacementValid(placement+piece) && board[col][row] == 1) {
+                                if (viable == null) viable = new HashSet<>();
+                                viable.add(piece);
+                            }
+                        }
+                    }
+
                 }
             }
         }
 
         return viable;
-        //return null; // FIXME Task 6: determine the set of all viable piece placements given existing placements
+        // FIXME Task 6: determine the set of all viable piece placements given existing placements
     }
 
     /**
