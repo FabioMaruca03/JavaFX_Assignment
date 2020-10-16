@@ -1,6 +1,5 @@
 package comp1110.ass2.gui;
 
-import comp1110.ass2.FitGame;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,10 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A very simple viewer for piece placements in the IQ-Fit game.
@@ -27,7 +22,6 @@ import java.util.stream.Collectors;
  * NOTE: This class is separate from your main game class.  This
  * class does not play a game, it just illustrates various piece
  * placements.
- * </p>
  */
 public class Viewer extends Application {
 
@@ -41,9 +35,7 @@ public class Viewer extends Application {
     //Changed root to board for easier reading -- Peter Zhao
     private final Group board = new Group();
     private final Group controls = new Group();
-    private String currentPlacement = "";
     private TextField textField;
-    private List<ImageView> pieces = new ArrayList<>();
 
     /**
      * Draw a placement in the window, removing any previously drawn one
@@ -51,35 +43,10 @@ public class Viewer extends Application {
      * @param placement A valid placement string
      */
     void makePlacement(String placement) {
-        if (placement.isBlank()) return;
-        String[] pieces = new String[placement.length()/4+currentPlacement.length()/4];
-        Arrays.fill(pieces, "");
-        for (int i = 0; i < placement.length() / 4; i++) {
-            pieces[i] = placement.substring(i*4, 4*i+4);
+        int numberofpieces = placement.length()/4;
+        for (int i = 0; i < numberofpieces; i++) {
+            getPieces(placement.substring(4*i,4*i+4));
         }
-
-        for (int i = 0; i < currentPlacement.length() / 4; i++) {
-            String piece = currentPlacement.substring(i*4, 4*i+4);
-            if (Arrays.stream(pieces).noneMatch(it->it.equals(piece)))
-                pieces[i+placement.length()/4] = piece;
-            else {
-                textField.clear();
-                return;
-            }
-        }
-
-
-
-        StringBuilder result = new StringBuilder();
-        Arrays.stream(pieces).sorted().forEach(result::append);
-
-        if (FitGame.isPlacementValid(result.toString())) {
-            int numberOfPieces = placement.length() / 4;
-            for (int i = 0; i < numberOfPieces; i++) {
-                getPieces(placement.substring(4 * i, 4 * i + 4));
-            }
-            currentPlacement = result.toString();
-        } else textField.clear();
         // FIXME Task 4: implement the simple placement viewer
     }
     // Helper function for Task 4, this will print the actual images
@@ -110,7 +77,8 @@ public class Viewer extends Application {
             }
         }
         // This below line was given to me by Matthew Chen the Viewer.class.getResource -- Peter Zhao
-        Image filename = new Image(Viewer.class.getResource("/assets-components/"+piecepng+".png").toString());
+        System.out.println("/assets/"+piecepng+".png");
+        Image filename = new Image(getClass().getResource("/assets-components/"+piecepng+".png").toString());
         placepiece.setImage(filename);
 
         // place at the correct x coordinate -- Peter Zhao
@@ -175,7 +143,6 @@ public class Viewer extends Application {
         // Print the image
         System.out.println(piecepng);
         System.out.println(NorthSouth.indexOf(piece.charAt(3)));
-        pieces.add(placepiece);
         board.getChildren().add(placepiece);
         // Something worth mentioning, even if the piece is not well formed the piece will still print, this needs a fix -- Peter Zhao
         // In addition to this, pieces that are facing either East or West do not place properly, I am trying to fix this error, but have had no luck -- Peter Zhao
@@ -195,15 +162,8 @@ public class Viewer extends Application {
             makePlacement(textField.getText());
             textField.clear();
         });
-        Button clear = new Button("Clear");
-        clear.setOnAction(e -> {
-            currentPlacement = "";
-            board.getChildren().removeAll(pieces);
-            pieces.clear();
-            e.consume();
-        });
         HBox hb = new HBox();
-        hb.getChildren().addAll(label1, textField, button, clear);
+        hb.getChildren().addAll(label1, textField, button);
         hb.setSpacing(10);
         hb.setLayoutX(130);
         hb.setLayoutY(VIEWER_HEIGHT - 50);

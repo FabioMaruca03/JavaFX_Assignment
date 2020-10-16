@@ -200,7 +200,7 @@ public class Board extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("FitGame Viewer");
+        primaryStage.setTitle("FitGame Board");
         // Print onto the board instead of a blank white canvas -- Peter Zhao
         ImageView boardPng = new ImageView();
         Image boardImage = new Image(Viewer.class.getResource("/assets/board.png").toString());
