@@ -50,11 +50,11 @@ public class Board extends Application {
      */
     void makePlacement(String placement) {
         if (placement.isBlank()) return;
-        String[] pieces = new String[placement.length()/4+currentPlacement.length()/4];
+        String[] pieces = new String[placement.length()/4+currentPlacement.length()/4]; // Sum of new pieces and old one
         Arrays.fill(pieces, "");
         for (int i = 0; i < currentPlacement.length() / 4; i++) {
             String piece = currentPlacement.substring(i*4, 4*i+4);
-            if (Arrays.stream(pieces).noneMatch(it->it.equals(piece)))
+            if (Arrays.stream(pieces).noneMatch(it->it.equals(piece))) // If no piece is equal to "piece"
                 pieces[i+placement.length()/4] = piece;
             else {
                 textField.clear();
@@ -239,42 +239,55 @@ public class Board extends Application {
 
         BorderPane p = new BorderPane();
         VBox box = new VBox();
-        box.setSpacing(20);
+        box.setSpacing(20); // Spacing in VBox = 20
 
-        Button start = new Button("Start");
-        start.setPrefSize(70,30);
-        start.setOnAction(e -> {
-            currentPlacement = "";
-            board.getChildren().removeAll(pieces);
-            pieces.clear();
+        Button start = new Button("Start"); // Start button
+        start.setPrefSize(100,30);
+        start.setOnAction(e -> { // Start settings
+            currentPlacement = ""; // Clear the board
+            board.getChildren().removeAll(pieces); // Clear the board
+            pieces.clear(); // Clear pieces
             game.show();
+            menu.hide();
             e.consume();
         });
         box.getChildren().add(start);
 
+        Button how = new Button("How to play");
+        how.setPrefSize(100,30);
+        how.setOnAction(e -> {
+            // todo: Add how to play logic ????
+            e.consume();
+        });
+        box.getChildren().add(how);
+
+        Button back = new Button("Continue");
+        back.setPrefSize(100,30);
+        back.setOnAction(e -> {
+            if (game != null){
+                game.show();
+                menu.hide();
+            }
+            e.consume();
+        });
+        box.getChildren().add(back);
+
         Button close = new Button("Exit");
-        close.setPrefSize(70, 30);
+        close.setPrefSize(100, 30);
         close.setOnAction(e -> {
             menu.close();
-            if (game != null)
+            if (game != null) {
                 game.close();
+            }
             e.consume();
             System.exit(0);
         });
         box.getChildren().add(close);
 
-        Button how = new Button("How to play");
-        how.setPrefSize(70,30);
-        how.setOnAction(e -> {
-            // todo: Add how to play logic ????
-            e.consume();
-        });
-
-        box.setAlignment(Pos.CENTER);
-        p.setCenter(box);
+        box.setAlignment(Pos.CENTER); // Align items in center
+        p.setCenter(box); // Set VBox in center
         Scene s = new Scene(p, 500, 500, Color.GRAY);
-        menu.setScene(s);
-
+        menu.setScene(s); // Setting scene up
 
         return menu;
     }
