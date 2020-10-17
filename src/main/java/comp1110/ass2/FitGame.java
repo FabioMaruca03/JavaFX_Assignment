@@ -334,6 +334,7 @@ public class FitGame {
 
         return viable;
         // FIXME Task 6: determine the set of all viable piece placements given existing placements
+        // removing duplicate lecters (Uppercase, Lowercase)
     }
 
     /**
