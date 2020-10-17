@@ -274,8 +274,9 @@ public class FitGame {
         if (placement.isBlank()) { // If blank check for each possible piece variation if fits inside -> (col, row)
             for (Sizes sizes : blankGame)
                 for (char orientation : s)
-                    if (isPlacementValid(sizes.name()+row+col+orientation) && board[col][row] == 1)
+                    if (isPlacementValid(sizes.name()+row+col+orientation) && board[col][row] == 1) {
                         pieces.add(sizes.name()+row+col+orientation);
+                    }
             return pieces;
         } else if (!isPlacementValid(placement))
             return null;
@@ -326,15 +327,30 @@ public class FitGame {
                                 viable.add(piece);
                             }
                         }
+                        piece = sizes.name()+(row+i+1)+(col-1)+orientation;
+                        if (!pieces.contains(piece)) {
+                            if (isPlacementValid(placement+piece) && board[col][row] == 1) {
+                                if (viable == null) viable = new HashSet<>();
+                                viable.add(piece);
+                            }
+                        }
+                        piece = sizes.name()+(row-1)+(col+i+1)+orientation;
+                        if (!pieces.contains(piece)) {
+                            if (isPlacementValid(placement+piece) && board[col][row] == 1) {
+                                if (viable == null) viable = new HashSet<>();
+                                viable.add(piece);
+                            }
+                        }
                     }
 
                 }
             }
         }
 
+        System.out.println("Viable for : "+placement+" are "+viable);
         return viable;
         // FIXME Task 6: determine the set of all viable piece placements given existing placements
-        // removing duplicate lecters (Uppercase, Lowercase)
+        // removing duplicate lecters (Uppercase, Lowercase)bg  4
     }
 
     /**
@@ -345,6 +361,63 @@ public class FitGame {
      * the challenge.
      */
     public static String getSolution(String challenge) {
-        return null;  // FIXME Task 9: determine the solution to the game, given a particular challenge
+        String result = "";
+        List<String> pieces = new ArrayList<>();
+        for (int i = 0; i < challenge.length() / 4; i++) {
+            pieces.add(String.valueOf(challenge.charAt(i*4)+challenge.charAt(i*4+1)+challenge.charAt(i*4+2)+challenge.charAt(i*4+3)));
+        }
+
+        Map<String, Set<Character>> map = new HashMap<>();
+        List<String> available = new ArrayList<>();
+        for (Sizes sizes : blankGame) {
+            for (char c : s) {
+                available.add(sizes.name() + c);
+            }
+        }
+        if (isPlacementValid(challenge)) {
+            int counterColumn = 0;
+            int x=0, y=0;
+            int counterRow = 0;
+            boolean isUpper = false;
+            char candidate = ' ';
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (board[i][j] == 0) {
+                        if (x == 0)
+                            x = j;
+                        if (y == 0)
+                            y = i;
+                        counterRow++;
+                    }
+                }
+                if (counterRow==4) {
+                    if (y+1<5) {
+                        int counter = 0;
+                        for (int j = x; j < counterRow+x; j++) {
+                            if(board[y+1][j] == 0)
+                                counter++;
+                        }
+                        if (counter >= 2) {
+                            isUpper = true;
+                        }
+
+
+                    } else if (y-1>0) {
+
+                    }
+                } else if (counterRow==3) {
+
+                }
+            }
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 5; j++) {
+
+                }
+            }
+
+        }
+
+        return result;  // FIXME Task 9: determine the solution to the game, given a particular challenge
     }
 }
